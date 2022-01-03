@@ -1,3 +1,3 @@
-## Core context
+## React Firetail
 
-Should be considered as an external package shared across multiple projects.
+Common tools for react apps - compatible with react18+, firebase9+, reactfire4+, tailwind3+.
