@@ -1,7 +1,7 @@
 {
   "name": "react-firetail",
   "version": "0.1.0",
-  "license": "Unlicense",
+  "license": "MIT",
   "description": "Common tools for react apps - compatible with react18+, firebase9+, reactfire4+, tailwind3+",
   "private": "false",
   "peerDependencies": {
