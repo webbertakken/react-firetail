@@ -1,0 +1,8 @@
+#!/bin/sh
+# .husky/pre-commit (v7)
+
+# Fix for colours in Windows
+export FORCE_COLOR=1
+
+# Check changes that are staged for commit
+yarn lint-staged

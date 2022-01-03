@@ -1,0 +1,8 @@
+#!/bin/sh
+# .husky/commit-msg (v7)
+
+# Fix for colours in Windows
+export FORCE_COLOR=1
+
+# Ensure
+yarn commitlint --edit $1
