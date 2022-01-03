@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "description": "Common tools for react apps - compatible with react18+, firebase9+, reactfire4+, tailwind3+",
+  "sideEffects": false,
   "keywords": [],
   "author": "WebberTakken <webber@takken.io>",
   "repository": {

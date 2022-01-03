@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useAuth, useUser } from 'reactfire';
 import { User } from 'firebase/auth';
 import { useCallback } from 'react';
-import ProfileIcon from '../../../../../user/ui/Profile/Icon/ProfileIcon';
+import ProfileIcon from './Icon/ProfileIcon';
 
 const UserDetails = () => {
   const auth = useAuth();
