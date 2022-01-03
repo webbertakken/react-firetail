@@ -3,7 +3,16 @@
   "version": "0.1.0",
   "license": "MIT",
   "description": "Common tools for react apps - compatible with react18+, firebase9+, reactfire4+, tailwind3+",
-  "private": "false",
+  "keywords": [],
+  "author": "WebberTakken <webber@takken.io>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webbertakken/react-firetail.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webbertakken/react-firetail/issues"
+  },
+  "homepage": "https://github.com/webbertakken/react-firetail",
   "peerDependencies": {
     "@loadable/component": "^5.15.2",
     "firebase": "^9.6.1",
