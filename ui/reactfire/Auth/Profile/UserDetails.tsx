@@ -1,33 +1,25 @@
 import * as React from 'react';
-import { useAuth, useUser } from 'reactfire';
+import { useUser } from 'reactfire';
 import { User } from 'firebase/auth';
-import { useCallback } from 'react';
 import ProfileIcon from './Icon/ProfileIcon';
 
 const UserDetails = () => {
-  const auth = useAuth();
   const { data } = useUser();
   const user = data as User;
 
-  const signOut = useCallback(async () => {
-    await auth.signOut();
-  }, [auth]);
-
   return (
     <>
-      <div className="group flex">
-        <ProfileIcon className="relative mr-3" />
-        <div>{user.displayName}</div>
+      <div className="group flex items-center justify-center pb-6">
+        <ProfileIcon className="relative mr-4 w-16 h-16" />
+        <input value={user.displayName} className="h-10 px-2 rounded bg-white bg-opacity-10" />
       </div>
       <div>
+        <h2>Connected identities</h2>
         <ul>
           {user.providerData?.map((profile) => (
-            <li key={profile?.providerId}>{profile?.providerId}</li>
+            <li key={profile?.providerId}>- {profile?.providerId}</li>
           ))}
         </ul>
-      </div>
-      <div>
-        <button onClick={signOut}>Sign out</button>
       </div>
     </>
   );
