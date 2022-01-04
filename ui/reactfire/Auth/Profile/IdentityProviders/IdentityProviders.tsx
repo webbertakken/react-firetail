@@ -7,14 +7,17 @@ import { supportedProviders } from '../../supportedProviders';
 import { useUser } from 'reactfire';
 import { useCallback, useState } from 'react';
 import { linkWithPopup, unlink, User, UserInfo } from 'firebase/auth';
+import { useNotification } from '../../../../../hooks/useNotification';
 
 const sortProviderIds = (a, b) => supportedProviders.indexOf(a) - supportedProviders.indexOf(b);
-const sortProviders = (a, b) => sortProviders(a.providerId, b.providerId);
+const sortProviders = (a, b) => sortProviderIds(a.providerId, b.providerId);
 
 interface Props {}
 
 function IdentityProviders({}: Props): JSX.Element {
   const { data: user }: { data: User } = useUser();
+  const notify = useNotification();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [providers, setProviders] = useState(user.providerData.sort(sortProviders));
   const [unusedProviderIds, setUnusedProviderIds] = useState<Array<string>>(
@@ -24,7 +27,11 @@ function IdentityProviders({}: Props): JSX.Element {
   const onUnlink = useCallback(
     async (providerId) => {
       try {
-        const action = unlink(user, providerId);
+        const action = notify.promise(unlink(user, providerId), {
+          loading: 'Confirming...',
+          error: `Unlinking failed. Please try again later.`,
+          success: `Unlinked ${providerId} identity.`,
+        });
         const result = await Promise.race([loadingDelay(), action]);
 
         if (result === 'loading') {
@@ -32,12 +39,9 @@ function IdentityProviders({}: Props): JSX.Element {
           await action;
         }
 
-        setProviders((providers) =>
-          providers.filter((provider) => provider.providerId !== providerId),
-        );
-
-        setUnusedProviderIds((providers) =>
-          Array.from(new Set([...providers, providerId])).sort(sortProviderIds),
+        setProviders((current) => current.filter((provider) => provider.providerId !== providerId));
+        setUnusedProviderIds((current) =>
+          Array.from(new Set([...current, providerId])).sort(sortProviderIds),
         );
       } catch (error) {
         console.error('unhandled error', error);
@@ -45,23 +49,27 @@ function IdentityProviders({}: Props): JSX.Element {
         setIsLoading(false);
       }
     },
-    [user],
+    [notify, user],
   );
 
   const onLink = useCallback(
     async (providerId) => {
       try {
         const provider = getProviderForProviderId(providerId);
-        const action = linkWithPopup(user, provider);
-        let result = await Promise.race([loadingDelay(), action]);
+        const action = notify.promise(linkWithPopup(user, provider), {
+          loading: 'Waiting for response from identity provider.',
+          error: (error) => `Unable to link identity provider. ${error}`,
+          success: `Your can now use your ${providerId} identity.`,
+        });
 
+        let result = await Promise.race([loadingDelay(), action]);
         if (result === 'loading') {
           setIsLoading(true);
           result = await action;
         }
 
-        setProviders((providers) => [...providers, result as UserInfo].sort(sortProviders));
-        setUnusedProviderIds((providers) => providers.filter((id) => id !== providerId));
+        setProviders((current) => [...current, result as UserInfo].sort(sortProviders));
+        setUnusedProviderIds((current) => current.filter((id) => id !== providerId));
       } catch (error) {
         switch (error.code) {
           case 'auth/popup-closed-by-user':
@@ -74,7 +82,7 @@ function IdentityProviders({}: Props): JSX.Element {
         setIsLoading(false);
       }
     },
-    [user],
+    [notify, user],
   );
 
   return (
