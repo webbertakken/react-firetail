@@ -1,0 +1,98 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "extraFileExtensions": [".mjs"],
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "jsx": true
+    },
+    "project": "./tsconfig.json"
+  },
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "plugin:unicorn/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react", "jsx-a11y", "import", "prettier", "unicorn"],
+  "settings": {
+    "react": { "version": "detect" },
+    "import/resolver": { "typescript": {} }
+  },
+  "rules": {
+    // React is imported in the entrypoint or _app.js
+    "react/react-in-jsx-scope": "off",
+    // Allow JSX in typescript files
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx"] }],
+    // Frameworks like Next and Flareact have specific Link components
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ],
+    // Some abbreviations are (or will soon be) clear even for new programmers
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "replacements": {
+          "props": { "properties": false },
+          "ref": { "reference": false },
+          "env": { "environment": false },
+          "fn": { "function": false }
+        }
+      }
+    ],
+    // Waiting for AirBnb upgrade: https://github.com/typescript-eslint/typescript-eslint/issues/2077#issuecomment-634811363
+    "@typescript-eslint/camelcase": "off",
+    // Conflict between prettier and eslint-unicorn
+    "react/jsx-wrap-multilines": "off",
+    // Allow forOfStatements
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+    // Continue is viable in forOf loops in generators
+    "no-continue": "off",
+    // Spreading is needed in case of forwarding props
+    "react/jsx-props-no-spreading": "off",
+    // Allow inline <strong> tags
+    "react/jsx-one-expression-per-line": "off",
+    // React components should be able to return null
+    "unicorn/no-null": "off",
+    // Redux and Immer use prop reassign by design
+    "no-param-reassign": ["error", { "props": false }],
+    // For react components it's not always useful to move small methods up in scope
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": false }],
+    // From experience, named exports are almost always desired. I got tired of this rule
+    "import/prefer-default-export": "off",
+    // Firebase requires importing each module that's used
+    "import/no-duplicates": "off",
+    // Unused vars are useful to keep method signatures consistent and documented
+    "@typescript-eslint/no-unused-vars": "off",
+    // Found false positive, not correctly detecting try catch, then autofixed and broke some code
+    "@typescript-eslint/return-await": "off",
+    // For this project don't use kebab-case
+    "unicorn/filename-case": [
+      "error",
+      {
+        "cases": {
+          "camelCase": true,
+          "pascalCase": true
+        },
+        "ignore": [".d.ts"]
+      }
+    ],
+    // in typescript having fn({}: Props) is very useful for boilerplate
+    "no-empty-pattern": "off",
+    // Allow Array.from(set) mitigate TS2569 which would require '--downlevelIteration'
+    "unicorn/prefer-spread": "off"
+  }
+}
