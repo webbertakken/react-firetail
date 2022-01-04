@@ -13,6 +13,13 @@ interface Props {
   provider: AuthProvider;
 }
 
+/**
+ * Button that signs you in using an IdentityProvider.
+ *
+ * Usage example:
+ *    import { GoogleAuthProvider } from 'firebase/auth';
+ *    <AuthProviderButton name="Google" provider={new GoogleAuthProvider()} />
+ */
 const ProviderButton = ({ name, provider }: Props) => {
   const auth = useAuth();
   const notify = useNotification();
