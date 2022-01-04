@@ -8,7 +8,7 @@ const PageViewLogger = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    logEvent(analytics, 'page-view', { path_name: pathname });
+    logEvent(analytics, 'page-view', { page_path: pathname });
   }, [analytics, pathname]);
 
   return null;
