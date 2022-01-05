@@ -13,8 +13,6 @@ function ProfileIcon({ className }: Props): JSX.Element {
     return <p>Loading...</p>;
   }
 
-  console.log(status);
-
   const { displayName, photoURL } = data?.user || { displayName: '', photoURL: '' };
 
   const initials = '🧑';
