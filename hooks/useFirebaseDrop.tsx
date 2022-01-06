@@ -1,11 +1,100 @@
 import { DropEvent, FileRejection } from 'react-dropzone';
-import { useStorage, useUser } from 'reactfire';
-import { useCallback } from 'react';
+import { useFirestore, useStorage, useUser } from 'reactfire';
+import { useCallback, useMemo } from 'react';
 import { ref, uploadBytesResumable } from 'firebase/storage';
+import { useNotification } from './useNotification';
+import Inventory from '../../organiser/model/Inventory';
+import { slugify } from '../utils/slugify';
+import { AudioQuestion } from '../../organiser/model/Types';
+import { doc, DocumentReference, getDoc, setDoc } from 'firebase/firestore';
+import { useParams } from 'react-router-dom';
 
-export function useFirebaseDrop(acceptFiles, uploadComplete) {
+// Todo - make this more generic so it's reusable
+export function useFirebaseDrop(acceptFilesCallback, uploadCompleteCallback, uploadFailedCallback) {
   const storage = useStorage();
   const { data: user } = useUser();
+  const firestore = useFirestore();
+  const notify = useNotification();
+  const { category } = useParams(); // Todo - remove this nuclear option.
+  const collectionPath = useMemo(
+    () => Inventory.getQuestionsPath(user.uid, category),
+    [user, category],
+  );
+
+  const saveFileMeta = useCallback(
+    async (file, uploadResult) => {
+      const slug = slugify(uploadResult.metadata.name);
+
+      const createIfNotExists = async () => {
+        const documentReference = doc(
+          firestore,
+          collectionPath,
+          slug,
+        ) as DocumentReference<AudioQuestion>;
+        const document = await getDoc(documentReference);
+
+        if (document.exists()) {
+          throw new Error('File already exists.');
+        }
+
+        const { path, lastModified, name, size, type } = file;
+        const { metadata, state, totalBytes } = uploadResult;
+
+        const {
+          bucket,
+          // cacheControl,?
+          contentDisposition,
+          contentEncoding,
+          // contentLanguage,?
+          contentType,
+          // customMetadata,?
+          fullPath,
+          generation,
+          md5Hash,
+          metageneration,
+          name: metaName,
+          size: metaSize,
+          timeCreated,
+          type: metaType,
+          updated,
+        } = metadata;
+
+        await setDoc(documentReference, {
+          id: slug,
+          slug,
+          path,
+          lastModified,
+          name,
+          size,
+          type,
+          metadata: {
+            bucket,
+            contentDisposition,
+            contentEncoding,
+            contentType,
+            fullPath,
+            generation,
+            md5Hash,
+            metageneration,
+            name: metaName,
+            size: metaSize,
+            timeCreated,
+            type: metaType,
+            updated,
+          },
+          state,
+          totalBytes,
+        });
+      };
+
+      await notify.promise(createIfNotExists(), {
+        loading: 'Adding question.',
+        error: (error) => `An error occurred. ${error.message}`,
+        success: `Question added.`,
+      });
+    },
+    [collectionPath, firestore, notify],
+  );
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent): void => {
@@ -19,7 +108,7 @@ export function useFirebaseDrop(acceptFiles, uploadComplete) {
 
       if (!user) return;
 
-      acceptFiles(
+      acceptFilesCallback(
         acceptedFiles.map((file) => {
           const preview = URL.createObjectURL(file);
 
@@ -28,7 +117,14 @@ export function useFirebaseDrop(acceptFiles, uploadComplete) {
           const enhancedFile = Object.assign(file, { preview, uploadTask, storageRef });
 
           uploadTask.then(
-            () => uploadComplete(file.name),
+            async (uploadResult) => {
+              try {
+                await saveFileMeta(file, uploadResult);
+                await uploadCompleteCallback(file);
+              } catch {
+                await uploadFailedCallback(file);
+              }
+            },
             (error) => console.error(error),
           );
 
@@ -36,7 +132,14 @@ export function useFirebaseDrop(acceptFiles, uploadComplete) {
         }),
       );
     },
-    [user, storage, acceptFiles, uploadComplete],
+    [
+      user,
+      storage,
+      saveFileMeta,
+      acceptFilesCallback,
+      uploadCompleteCallback,
+      uploadFailedCallback,
+    ],
   );
 
   if (!user) {
