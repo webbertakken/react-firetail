@@ -1,25 +1,42 @@
 import { DropEvent, FileRejection } from 'react-dropzone';
 import { useFirestore, useStorage, useUser } from 'reactfire';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { useNotification } from './useNotification';
-import Inventory from '../../organiser/model/Inventory';
 import { slugify } from '../utils/slugify';
 import { AudioQuestion } from '../../organiser/model/Types';
 import { doc, DocumentReference, getDoc, setDoc } from 'firebase/firestore';
-import { useParams } from 'react-router-dom';
 
-// Todo - make this more generic so it's reusable
-export function useFirebaseDrop(acceptFilesCallback, uploadCompleteCallback, uploadFailedCallback) {
+/**
+ * Handles the firebase side of uploads and saving the meta information.
+ *
+ * Example usage:
+ *   import { useDropzone } from 'react-dropzone';
+ *
+ *   const onDrop = useFirebaseDrop(
+ *     'questions/question1',
+ *     'users/user1/questions/question1',
+ *     (x) => dispatch(filesAccepted(x)),
+ *     (x) => dispatch(uploadRegistered(x)),
+ *     (x) => dispatch(uploadFailed(x)),
+ *   );
+ *
+ *  const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
+ *    accept: ['image/*', 'video/*', 'audio/*'],
+ *    onDrop,
+ *  });
+ */
+export function useFirebaseDrop(
+  fileUploadPath,
+  metaCollectionPath,
+  acceptFilesCallback,
+  uploadCompleteCallback,
+  uploadFailedCallback,
+) {
   const storage = useStorage();
   const { data: user } = useUser();
   const firestore = useFirestore();
   const notify = useNotification();
-  const { category } = useParams(); // Todo - remove this nuclear option.
-  const collectionPath = useMemo(
-    () => Inventory.getQuestionsPath(user.uid, category),
-    [user, category],
-  );
 
   const saveFileMeta = useCallback(
     async (file, uploadResult) => {
@@ -28,7 +45,7 @@ export function useFirebaseDrop(acceptFilesCallback, uploadCompleteCallback, upl
       const createIfNotExists = async () => {
         const documentReference = doc(
           firestore,
-          collectionPath,
+          metaCollectionPath,
           slug,
         ) as DocumentReference<AudioQuestion>;
         const document = await getDoc(documentReference);
@@ -88,12 +105,12 @@ export function useFirebaseDrop(acceptFilesCallback, uploadCompleteCallback, upl
       };
 
       await notify.promise(createIfNotExists(), {
-        loading: 'Adding question.',
+        loading: 'Uploading...',
         error: (error) => `An error occurred. ${error.message}`,
-        success: `Question added.`,
+        success: `Upload complete.`,
       });
     },
-    [collectionPath, firestore, notify],
+    [metaCollectionPath, firestore, notify],
   );
 
   const onDrop = useCallback(
@@ -106,13 +123,11 @@ export function useFirebaseDrop(acceptFilesCallback, uploadCompleteCallback, upl
         ),
       );
 
-      if (!user) return;
-
       acceptFilesCallback(
         acceptedFiles.map((file) => {
           const preview = URL.createObjectURL(file);
 
-          const storageRef = ref(storage, `user/${user.uid}/${file.name}`);
+          const storageRef = ref(storage, `${fileUploadPath}/${file.name}`);
           const uploadTask = uploadBytesResumable(storageRef, file);
           const enhancedFile = Object.assign(file, { preview, uploadTask, storageRef });
 
@@ -133,9 +148,9 @@ export function useFirebaseDrop(acceptFilesCallback, uploadCompleteCallback, upl
       );
     },
     [
-      user,
       storage,
       saveFileMeta,
+      fileUploadPath,
       acceptFilesCallback,
       uploadCompleteCallback,
       uploadFailedCallback,
