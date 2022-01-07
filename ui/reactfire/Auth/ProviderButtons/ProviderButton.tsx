@@ -1,8 +1,8 @@
 import { useAuth } from 'reactfire';
-import { useState } from 'react';
+import { ComponentType, useMemo, useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { loadingDelay } from '../../../../utils/loadingDelay';
-import Spinner from 'core/ui/react-icons/Spinner';
+import Spinner from '../../../react-icons/Spinner';
 import DynamicIcon from '../../../react-icons/DynamicIcon';
 import getIconPropsForProviderId from '../getIconPropsForProviderId';
 import { AuthProvider } from 'firebase/auth';
@@ -11,6 +11,7 @@ import { useNotification } from '../../../../hooks/useNotification';
 interface Props {
   name: string;
   provider: AuthProvider;
+  button?: ComponentType<any>;
 }
 
 /**
@@ -20,7 +21,7 @@ interface Props {
  *    import { GoogleAuthProvider } from 'firebase/auth';
  *    <AuthProviderButton name="Google" provider={new GoogleAuthProvider()} />
  */
-const ProviderButton = ({ name, provider }: Props) => {
+const ProviderButton = ({ name, provider, button }: Props) => {
   const auth = useAuth();
   const notify = useNotification();
 
@@ -53,13 +54,14 @@ const ProviderButton = ({ name, provider }: Props) => {
   };
 
   const providerIcon = <DynamicIcon {...getIconPropsForProviderId(provider.providerId)} />;
+  const Component = useMemo(() => button || ((props) => <button {...props} />), [button]);
 
   return (
     <div>
-      <button className="social" onClick={signInWithProvider}>
+      <Component onClick={signInWithProvider}>
         {isLoading ? <Spinner /> : providerIcon}
         <span>{name}</span>
-      </button>
+      </Component>
     </div>
   );
 };
