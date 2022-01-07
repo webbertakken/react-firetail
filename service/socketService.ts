@@ -1,3 +1,5 @@
+import { isDevelopment } from '../utils/isProduction';
+
 export interface SocketEvent {
   type: string;
   payload: string | { [key: string]: any };
@@ -35,7 +37,8 @@ export class SocketService {
   }
 
   send(event: SocketEvent) {
-    console.log('sending:', event);
+    if (isDevelopment()) console.log('sending:', event);
+
     this.socket.send(JSON.stringify(event));
   }
 }
