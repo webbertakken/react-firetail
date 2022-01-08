@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { useNotification } from './useNotification';
 import { slugify } from '../utils/slugify';
-import { AudioQuestion } from '../../organiser/model/Types';
+import { Question } from '../../organiser/model/Types';
 import { doc, DocumentReference, getDoc, setDoc } from 'firebase/firestore';
 
 /**
@@ -47,7 +47,7 @@ export function useFirebaseDrop(
           firestore,
           metaCollectionPath,
           slug,
-        ) as DocumentReference<AudioQuestion>;
+        ) as DocumentReference<Question>;
         const document = await getDoc(documentReference);
 
         if (document.exists()) {

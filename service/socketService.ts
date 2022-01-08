@@ -30,6 +30,7 @@ export class SocketService {
     }
 
     this.socket = new WebSocket(this.url);
+    this.reconnectAttempts = 0;
   }
 
   public reconnect() {
