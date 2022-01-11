@@ -52,19 +52,19 @@ function ProfileModal({}: Props): JSX.Element {
       Footer={({ closeModal }: any) => (
         <>
           <button
-            onClick={() => signOut(closeModal)}
-            className="text-white background-transparent uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-            type="button"
-          >
-            Sign out
-          </button>
-          <div className="flex-grow" />
-          <button
             className="text-red-500 background-transparent uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             type="button"
             onClick={() => deleteAccount(closeModal)}
           >
             Delete account
+          </button>
+          <div className="flex-grow" />
+          <button
+            className="text-white background-transparent uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="button"
+            onClick={() => signOut(closeModal)}
+          >
+            Sign out
           </button>
         </>
       )}
