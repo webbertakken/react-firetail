@@ -3,13 +3,14 @@ import getIconPropsForProviderId from '../../getIconPropsForProviderId';
 import Spinner from '../../../../react-icons/Spinner';
 import { loadingDelay } from '../../../../../utils/loadingDelay';
 import getProviderForProviderId from '../../getProviderForProviderId';
-import { supportedProviders } from '../../supportedProviders';
+import { supportedProvidersIds } from '../../supportedProviders';
 import { useUser } from 'reactfire';
 import { useCallback, useState } from 'react';
 import { linkWithPopup, unlink, User, UserInfo } from 'firebase/auth';
 import { useNotification } from '../../../../../hooks/useNotification';
 
-const sortProviderIds = (a, b) => supportedProviders.indexOf(a) - supportedProviders.indexOf(b);
+const sortProviderIds = (a, b) =>
+  supportedProvidersIds.indexOf(a) - supportedProvidersIds.indexOf(b);
 const sortProviders = (a, b) => sortProviderIds(a.providerId, b.providerId);
 
 interface Props {}
@@ -21,7 +22,7 @@ function IdentityProviders({}: Props): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [providers, setProviders] = useState(user.providerData.sort(sortProviders));
   const [unusedProviderIds, setUnusedProviderIds] = useState<Array<string>>(
-    supportedProviders.filter((x) => !user.providerData.map((y) => y.providerId).includes(x)),
+    supportedProvidersIds.filter((x) => !user.providerData.map((y) => y.providerId).includes(x)),
   );
 
   const onUnlink = useCallback(

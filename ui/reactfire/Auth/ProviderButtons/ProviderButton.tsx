@@ -4,24 +4,14 @@ import { signInWithPopup } from 'firebase/auth';
 import { loadingDelay } from '../../../../utils/loadingDelay';
 import Spinner from '../../../react-icons/Spinner';
 import DynamicIcon from '../../../react-icons/DynamicIcon';
-import getIconPropsForProviderId from '../getIconPropsForProviderId';
-import { AuthProvider } from 'firebase/auth';
 import { useNotification } from '../../../../hooks/useNotification';
+import { Provider } from '../supportedProviders';
 
-interface Props {
-  name: string;
-  provider: AuthProvider;
+interface Props extends Provider {
   button?: ComponentType<any>;
 }
 
-/**
- * Button that signs you in using an IdentityProvider.
- *
- * Usage example:
- *    import { GoogleAuthProvider } from 'firebase/auth';
- *    <AuthProviderButton name="Google" provider={new GoogleAuthProvider()} />
- */
-const ProviderButton = ({ name, provider, button }: Props) => {
+const ProviderButton = ({ name, provider, icon, button }: Props) => {
   const auth = useAuth();
   const notify = useNotification();
 
@@ -53,7 +43,7 @@ const ProviderButton = ({ name, provider, button }: Props) => {
     }
   };
 
-  const providerIcon = <DynamicIcon {...getIconPropsForProviderId(provider.providerId)} />;
+  const providerIcon = <DynamicIcon {...icon} />;
   const Component = useMemo(() => button || ((props) => <button {...props} />), [button]);
 
   return (
