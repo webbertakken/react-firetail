@@ -23,7 +23,7 @@ function ProfileIcon({ className }: Props): JSX.Element {
       to="#profile"
       replace
       className={cx(
-        'w-10 h-10 bg-cover bg-center rounded-full bg-gray-800 flex items-center justify-center z-20 border-[1px] border-gray-600 shadow-md',
+        'select-none w-10 h-10 bg-cover bg-center rounded-full bg-gray-800 flex items-center justify-center z-20 border-[1px] border-gray-600 shadow-md',
         className,
       )}
     >
