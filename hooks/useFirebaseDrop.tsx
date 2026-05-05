@@ -114,7 +114,7 @@ export function useFirebaseDrop(
   );
 
   const onDrop = useCallback(
-    (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent): void => {
+    (acceptedFiles: File[], fileRejections: FileRejection[], _event: DropEvent): void => {
       fileRejections.map((rejection) =>
         console.error(
           `failed to upload: ${rejection.file.name}. ${rejection.errors

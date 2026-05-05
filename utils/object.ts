@@ -60,7 +60,7 @@ export const replacePathsRecursively = (
 export const internal_replacePathRecursively = (
   original: object,
   path: string,
-  replacer: Function = (value, root) => {},
+  replacer: Function = (_value: unknown, _root: unknown) => {},
   depth: number = 1,
 ) => {
   const segments = path.split('.');
