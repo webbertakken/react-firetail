@@ -16,7 +16,7 @@
   "homepage": "https://github.com/webbertakken/react-firetail",
   "peerDependencies": {
     "@loadable/component": "^5.15.2",
-    "firebase": "^9.6.1",
+    "firebase": "^9.6.1 || ^13.0.0",
     "postcss": "^8.4.5",
     "react": "^18.0.0-rc.0",
     "react-dom": "^18.0.0-rc.0",
