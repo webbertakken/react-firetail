@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 9
+  version: 10
   cacheKey: 10
 
 "@babel/code-frame@npm:^7.28.6, @babel/code-frame@npm:^7.29.0":
@@ -2872,7 +2872,7 @@ __metadata:
     react-dom: ^18.0.0-rc.0
     react-hot-toast: ^2.1.1
     reactfire: ^4.2.1
-    tailwindcss: ^3.0.8
+    tailwindcss: ^3.0.8 || ^4.0.0
     web-vitals: ^2.1.2
   languageName: unknown
   linkType: soft
