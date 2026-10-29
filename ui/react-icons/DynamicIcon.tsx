@@ -7,22 +7,28 @@ interface Props extends IconContext {
   className?: string;
 }
 
+interface LibraryIconProps {
+  library: string;
+  icon: string;
+  className?: string;
+}
+
+const LibraryIcon = loadable<LibraryIconProps>(
+  ({ library }) => import(/* webpackPrefetch: true */ `react-icons/${library}/index.js`),
+  {
+    cacheKey: ({ library }) => library,
+    resolveComponent: (iconLibrary, { icon }) => iconLibrary[icon],
+  },
+);
+
 const DynamicIcon: FC<Props> = ({ icon, className, ...iconContext }) => {
-  const library = icon?.match(/[A-Z][a-z]+/g)[0].toLowerCase();
-  const fallback = <div>•</div>;
+  const library = icon?.match(/[A-Z][a-z]+/g)?.[0].toLowerCase();
 
-  if (!library || !icon) return fallback;
-
-  const Icon = loadable(
-    () => import(/* webpackPrefetch: true */ `react-icons/${library}/index.js`),
-    {
-      resolveComponent: (element: JSX.Element) => element[icon as keyof JSX.Element],
-    },
-  );
+  if (!library) return <div>•</div>;
 
   return (
     <IconContext.Provider value={iconContext}>
-      <Icon className={className} />
+      <LibraryIcon library={library} icon={icon} className={className} />
     </IconContext.Provider>
   );
 };

@@ -1,5 +1,5 @@
 import { useAuth } from 'reactfire';
-import { ComponentType, useMemo, useState } from 'react';
+import { ComponentType, useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { loadingDelay } from '../../../../utils/loadingDelay';
 import Spinner from '../../../react-icons/Spinner';
@@ -44,7 +44,7 @@ const ProviderButton = ({ name, provider, icon, button }: Props) => {
   };
 
   const providerIcon = <DynamicIcon {...icon} />;
-  const Component = useMemo(() => button || ((props) => <button {...props} />), [button]);
+  const Component = button ?? 'button';
 
   return (
     <div>
