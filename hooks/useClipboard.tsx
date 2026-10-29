@@ -10,7 +10,6 @@ export function useClipboard() {
       if (onError) {
         onError(error);
       } else {
-        // eslint-disable-next-line no-console
         console.error(error);
       }
     }
