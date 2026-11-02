@@ -61,6 +61,7 @@
   },
   "packageManager": "yarn@4.18.1",
   "resolutions": {
+    "minimatch": "^11.0.1",
     "tinypool@npm:2.1.0": "npm:^2.1.2"
   }
 }
