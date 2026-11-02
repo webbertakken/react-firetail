@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import cx from 'classnames';
 import { Link } from 'react-router-dom';
 import { useSigninCheck } from 'reactfire';
@@ -6,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-function ProfileIcon({ className }: Props): JSX.Element {
+function ProfileIcon({ className }: Props): ReactElement {
   const { status, data } = useSigninCheck();
 
   if (status === 'loading') {

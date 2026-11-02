@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Modal, { ModalProps } from './Modal';
-import { useMemo } from 'react';
+import { useMemo, type ReactElement } from 'react';
 
 interface Props extends ModalProps {
   hash: string; // Hashtag to match against, must include `#`.
@@ -14,7 +14,7 @@ function HashModal({
   onOpen: onOpenFn,
   onClose: onCloseFn,
   ...modalProps
-}: Props): JSX.Element {
+}: Props): ReactElement {
   const { hash: locationHash, ...locationWithoutHash } = useLocation();
   const navigate = useNavigate();
   const open = useMemo(() => hash === locationHash, [hash, locationHash]);

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactElement } from 'react';
 import cx from 'classnames';
 import ErrorBoundary from '../../react/ErrorBoundary';
 
@@ -12,9 +12,9 @@ interface OpenInjected extends Object {
 
 export interface ModalProps {
   title?: string;
-  Content: ({ closeModal }: CloseInjected) => JSX.Element;
-  Footer?: ({ closeModal }: CloseInjected) => JSX.Element;
-  Trigger?: ({ openModal }: OpenInjected) => JSX.Element;
+  Content: ({ closeModal }: CloseInjected) => ReactElement;
+  Footer?: ({ closeModal }: CloseInjected) => ReactElement;
+  Trigger?: ({ openModal }: OpenInjected) => ReactElement;
   onOpen?: () => void;
   onClose?: () => void;
   open?: boolean; // manual open/close
@@ -32,7 +32,7 @@ function Modal({
   open,
   size = 'md',
   className,
-}: ModalProps): JSX.Element {
+}: ModalProps): ReactElement {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [originalOverflow, setOriginalOverflow] = useState<string>();
 

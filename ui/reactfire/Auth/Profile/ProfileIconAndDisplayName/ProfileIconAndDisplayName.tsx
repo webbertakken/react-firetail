@@ -2,7 +2,7 @@ import React from 'react';
 import { useUser } from 'reactfire';
 import { User, updateProfile } from 'firebase/auth';
 import ProfileIcon from '../Icon/ProfileIcon';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactElement } from 'react';
 import { debounce } from '../../../../../utils/debounce';
 import { useNotification } from '../../../../../hooks/useNotification';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import { profileUpdated } from '../../../../../../user/logic/ducks/profileDuck';
 
 interface Props {}
 
-function ProfileIconAndDisplayName({}: Props): JSX.Element {
+function ProfileIconAndDisplayName({}: Props): ReactElement {
   const { data: user }: { data: User } = useUser();
   const [displayName, setDisplayName] = useState<string>(user.displayName);
   const notify = useNotification();

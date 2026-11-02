@@ -5,7 +5,7 @@ import { loadingDelay } from '../../../../../utils/loadingDelay';
 import getProviderForProviderId from '../../getProviderForProviderId';
 import { supportedProvidersIds } from '../../supportedProviders';
 import { useUser } from 'reactfire';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactElement } from 'react';
 import { linkWithPopup, unlink, User, UserInfo } from 'firebase/auth';
 import { useNotification } from '../../../../../hooks/useNotification';
 
@@ -15,7 +15,7 @@ const sortProviders = (a, b) => sortProviderIds(a.providerId, b.providerId);
 
 interface Props {}
 
-function IdentityProviders({}: Props): JSX.Element {
+function IdentityProviders({}: Props): ReactElement {
   const { data: user }: { data: User } = useUser();
   const notify = useNotification();
 
