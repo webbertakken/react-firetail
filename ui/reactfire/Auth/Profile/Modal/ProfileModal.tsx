@@ -3,7 +3,7 @@ import HashModal from '../../../../tailwind/Modal/HashModal';
 import SignInForm from '../../../../../../shared/ui/SignInForm/SignInForm';
 import UserDetails from '../UserDetails';
 import UserContentWrapper from '../../UserContentWrapper/UserContentWrapper';
-import { useCallback } from 'react';
+import { useCallback, type ReactElement } from 'react';
 import { deleteUser, User } from 'firebase/auth';
 import { useNotification } from '../../../../../hooks/useNotification';
 
@@ -11,7 +11,7 @@ interface CloseInjected {
   closeModal: (event?: Event) => void;
 }
 
-function ProfileContent(): JSX.Element {
+function ProfileContent(): ReactElement {
   return (
     <UserContentWrapper fallback={<SignInForm />}>
       <UserDetails />
@@ -19,7 +19,7 @@ function ProfileContent(): JSX.Element {
   );
 }
 
-function ProfileFooter({ closeModal }: CloseInjected): JSX.Element {
+function ProfileFooter({ closeModal }: CloseInjected): ReactElement {
   const auth = useAuth();
   const { data: user }: { data: User } = useUser();
   const notify = useNotification();
@@ -65,7 +65,7 @@ function ProfileFooter({ closeModal }: CloseInjected): JSX.Element {
   );
 }
 
-function ProfileModal(): JSX.Element {
+function ProfileModal(): ReactElement {
   return (
     <HashModal hash="#profile" title="Profile" Content={ProfileContent} Footer={ProfileFooter} />
   );

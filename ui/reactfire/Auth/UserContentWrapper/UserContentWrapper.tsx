@@ -1,9 +1,9 @@
 import { useSigninCheck } from 'reactfire';
-import React, { useMemo } from 'react';
+import React, { useMemo, type ReactElement } from 'react';
 
-interface Props extends React.PropsWithChildren<{ fallback?: JSX.Element }> {}
+interface Props extends React.PropsWithChildren<{ fallback?: ReactElement }> {}
 
-const UserContentWrapper = ({ children, fallback: userFallback }: Props): JSX.Element => {
+const UserContentWrapper = ({ children, fallback: userFallback }: Props): ReactElement => {
   const { data: signInCheckResult } = useSigninCheck();
 
   let fallback = useMemo(() => {
@@ -18,7 +18,7 @@ const UserContentWrapper = ({ children, fallback: userFallback }: Props): JSX.El
   }
 
   if (signInCheckResult.signedIn !== true) return fallback;
-  return children as JSX.Element;
+  return children as ReactElement;
 };
 
 export default UserContentWrapper;

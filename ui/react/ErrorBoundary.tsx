@@ -1,12 +1,14 @@
-import React, { ReactChildren } from 'react';
+import React, { type ReactNode } from 'react';
 
 interface Props {
-  children: ReactChildren;
+  children: ReactNode;
 }
 
-export default class ErrorBoundary extends React.Component {
-  state;
+interface State {
+  hasError: boolean;
+}
 
+export default class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
