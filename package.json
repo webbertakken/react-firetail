@@ -33,7 +33,7 @@
     "eslint-plugin-unicorn": "^80.0.0",
     "husky": "9",
     "lint-staged": "^17.0.0",
-    "oxfmt": "^0.78.0",
+    "oxfmt": "^0.79.0",
     "oxlint": "^1.63.0",
     "typescript": "^7.0.0",
     "vite": "^8.0.0",
@@ -59,7 +59,7 @@
     "*.@(json|jsonc|json5|md|mdx|yaml|yml|css|scss|sass|html|toml)": "oxfmt --write",
     ".github/workflows/*.@(yml|yaml)": "actionlint"
   },
-  "packageManager": "yarn@4.18.1",
+  "packageManager": "yarn@4.19.0",
   "resolutions": {
     "minimatch": "^11.0.1",
     "tinypool@npm:2.1.0": "npm:^2.1.2"
